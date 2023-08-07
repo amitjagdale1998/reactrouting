@@ -1,0 +1,10 @@
+@import "./root.scss";
+.home-page {
+  background-color: $bg-color;
+  .view-button {
+    width: 19rem;
+    background-color: blueviolet;
+    border-radius: 10px;
+    margin: 2px;
+  }
+}
