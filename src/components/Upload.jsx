@@ -13,73 +13,80 @@ const Upload = () => {
     "Biography",
   ];
 
-  const [pdfData, setPdfData] = useState(null);
+  const [pdfData, setPdfData] = useState();
   const [pdfInfo, setPdfInfo] = useState({
     title: "",
     categeory: "",
   });
 
   const token = localStorage.getItem("token");
+  const uploadPfInfo = async () => {
+    if (!pdfInfo.title || !pdfInfo.categeory || !pdfData) {
+      alert("All Field Mandatory!");
+      return;
+    }
+    try {
+      const respdfinfo = await axios.post(
+        "http://localhost:5000/api/v1/saveNotes",
+        pdfInfo,
+        {
+          headers: {
+            "auth-token": token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(respdfinfo.data);
+      const res = respdfinfo.data;
+      if (res.success) {
+        setPdfInfo({ title: "", categeory: "" });
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const uploadPdf = async () => {
+    await uploadPfInfo();
+    if (!pdfData) {
+      return;
+    }
+
+    const fileName = pdfData.name;
+    console.log(pdfData.name);
+    var ext = fileName.substring(fileName.lastIndexOf(".") + 1);
+
+    if (ext.toLowerCase() !== "pdf") {
+      alert("Invalid file format! Only PDF files are allowed.");
+
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", pdfData);
+
     try {
-      if (!pdfData) {
-        alert("Please select a PDF file.");
-        return;
-      }
-
-      const fileName = pdfData.name;
-      var ext = fileName.substring(fileName.lastIndexOf(".") + 1);
-
-      if (ext.toLowerCase() !== "pdf") {
-        alert("Invalid file format! Only PDF files are allowed.");
-        return;
-      }
-
-      try {
-        const respdfinfo = await axios.post(
-          "http://localhost:5000/api/v1/saveNotes",
-          pdfInfo,
-          {
-            headers: {
-              "auth-token": token,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        console.log(respdfinfo.data);
-        const res = respdfinfo.data;
-        console.log(res);
-      } catch (error) {
-        console.error("Error occurred:", error);
-        alert("An error occurred while saving notes. Please try again later.");
-      }
-
-      const formData = new FormData();
-      formData.append("file", pdfData);
-      alert();
-
-      try {
-        const res = await axios.post(
-          "http://localhost:5000/api/v1/uploadPdf",
-          formData,
-          {
-            headers: {
-              "auth-token": token,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        console.log(res.data);
-        const responseData = res.data;
-        if (responseData.success) {
-          Swal.fire({ text: "File Upload SuccessFully", icon: "success" });
-          setPdfData(null); // Clear the selected file after successful upload
-          setPdfInfo({ title: "", categeory: "" }); // Clear the form fields after successful upload
+      const res = await axios.post(
+        "http://localhost:5000/api/v1/uploadPdf",
+        formData,
+        {
+          headers: {
+            "auth-token": token,
+            "Content-Type": "multipart/form-data",
+          },
         }
-      } catch (error) {
-        console.error("Error occurred during file upload:", error);
-        alert("An error occurred during file upload. Please try again later.");
+      );
+      console.log(res.data);
+      const responseData = res.data;
+      if (responseData.success) {
+        Swal.fire({ text: "File Upload SuccessFully", icon: "success" });
+        setPdfData(); // Clear the selected file after successful upload
+        // Clear the form fields after successful upload
+        const fileInput = document.getElementsByClassName("fileInput");
+        if (fileInput) {
+          fileInput.value = "";
+        }
       }
     } catch (error) {
       console.log(error);
@@ -123,7 +130,11 @@ const Upload = () => {
           ))}
         </select>
         <br />
-        <input type="file" className="mt-3" onChange={handlePdfOnChange} />
+        <input
+          type="file"
+          className="mt-3 fileInput"
+          onChange={handlePdfOnChange}
+        />
         <button onClick={() => uploadPdf()}>Submit</button>
         <button type="reset">Cancel</button>
       </div>

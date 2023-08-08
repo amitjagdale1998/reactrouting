@@ -42,12 +42,13 @@ function Header(props) {
       <List>
         {navItems.map((item) => (
           <ListItem key={item.label} disablePadding>
-            <ListItemButton sx={{ textAlign: "center" }}>
-              <ListItemText
-                primary={item.label}
-                component={Link}
-                to={item.link}
-              />
+            <ListItemButton
+              sx={{ textAlign: "center" }}
+              primary={item.label}
+              component={Link}
+              to={item.link}
+            >
+              <ListItemText>{item.label}</ListItemText>
             </ListItemButton>
           </ListItem>
         ))}
