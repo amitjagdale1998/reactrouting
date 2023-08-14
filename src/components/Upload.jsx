@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./styles/upload.scss";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { MDBBtn } from "mdb-react-ui-kit";
 
 const Upload = () => {
   const categories = [
@@ -13,7 +14,7 @@ const Upload = () => {
     "Biography",
   ];
 
-  const [pdfData, setPdfData] = useState();
+  const [pdfData, setPdfData] = useState("");
   const [pdfInfo, setPdfInfo] = useState({
     title: "",
     categeory: "",
@@ -49,6 +50,9 @@ const Upload = () => {
 
   const uploadPdf = async () => {
     await uploadPfInfo();
+    if (!pdfInfo.title || !pdfInfo.categeory || !pdfData) {
+      return;
+    }
     if (!pdfData) {
       return;
     }
@@ -80,9 +84,10 @@ const Upload = () => {
       console.log(res.data);
       const responseData = res.data;
       if (responseData.success) {
-        Swal.fire({ text: "File Upload SuccessFully", icon: "success" });
-        setPdfData(); // Clear the selected file after successful upload
+        setPdfData(""); // Clear the selected file after successful upload
         // Clear the form fields after successful upload
+
+        Swal.fire({ text: "File Upload SuccessFully", icon: "success" });
         const fileInput = document.getElementsByClassName("fileInput");
         if (fileInput) {
           fileInput.value = "";
@@ -105,8 +110,9 @@ const Upload = () => {
   };
 
   return (
-    <div className="container mt-3 upload-page">
+    <div className="container mt-3 col-6 upload-page">
       <div className="row">
+        <h1>Upload Here!</h1>
         <input
           type="text"
           className="mt-3"
@@ -135,8 +141,17 @@ const Upload = () => {
           className="mt-3 fileInput"
           onChange={handlePdfOnChange}
         />
-        <button onClick={() => uploadPdf()}>Submit</button>
-        <button type="reset">Cancel</button>
+        <div className="row gy-3 gx-9">
+          <div className="upload-buttons">
+            <MDBBtn className="submit-button" onClick={() => uploadPdf()}>
+              Submit
+            </MDBBtn>
+
+            <MDBBtn className="cancel-button" type="reset">
+              Cancel
+            </MDBBtn>
+          </div>
+        </div>
       </div>
     </div>
   );

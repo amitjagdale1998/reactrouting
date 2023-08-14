@@ -5,18 +5,15 @@ import Login from "./components/commonpages/Login";
 import Logout from "./components/commonpages/Logout";
 import Footer from "./components/Footer";
 import Signup from "./components/commonpages/Signup";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Error from "./components/commonpages/Error";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Protectedroutes from "./components/Protectedroutes";
 import Upload from "./components/Upload";
-const App = () => {
-  const token = localStorage.getItem("token");
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+import Profile from "./components/Profile";
 
-  useEffect(() => {
-    // Update isLoggedIn state based on the presence of the token in local storage
-  }, []);
+const App = () => {
+  const Token = localStorage.getItem("token");
 
   return (
     <BrowserRouter>
@@ -24,19 +21,35 @@ const App = () => {
         <Header />
       </Protectedroutes>
       <Routes>
-        <Route path="/" exact element={<Login />} />
-
+        {" "}
+        {Token ? (
+          <>
+            <Route exact path="/signup" element={<Error />} />
+          </>
+        ) : (
+          <>
+            <Route exact path="/signup" element={<Signup />} />
+          </>
+        )}
+        {Token ? (
+          <>
+            <Route
+              exact
+              path="/"
+              element={
+                <Protectedroutes>
+                  <Home />{" "}
+                </Protectedroutes>
+              }
+            />
+          </>
+        ) : (
+          <>
+            <Route exact path="/" element={<Login />} />
+          </>
+        )}
         <Route
           exact
-          path="/home"
-          element={
-            <Protectedroutes>
-              <Home />{" "}
-            </Protectedroutes>
-          }
-        />
-
-        <Route
           path="/images"
           element={
             <Protectedroutes>
@@ -44,8 +57,17 @@ const App = () => {
             </Protectedroutes>
           }
         />
-
         <Route
+          exact
+          path="/images/:categeory"
+          element={
+            <Protectedroutes>
+              <Images />
+            </Protectedroutes>
+          }
+        />
+        <Route
+          exact
           path="/upload"
           element={
             <Protectedroutes>
@@ -53,12 +75,19 @@ const App = () => {
             </Protectedroutes>
           }
         />
-
-        <Route exact path="logout" element={<Logout />} />
-
+        <Route
+          exact
+          path="profile"
+          element={
+            <Protectedroutes>
+              <Profile />
+            </Protectedroutes>
+          }
+        ></Route>
+        <Route exact path="/signup" element={<Signup />} />
         <Route path="*" element={<Error />} />
-        <Route path="/signup" element={<Signup />} />
       </Routes>
+
       <Protectedroutes>
         <Footer />
       </Protectedroutes>

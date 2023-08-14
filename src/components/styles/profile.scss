@@ -1,0 +1,26 @@
+.visible-icon {
+  margin-top: -7rem;
+  box-sizing: content-box;
+  cursor: pointer;
+  position: relative;
+  margin-left: 45rem;
+}
+.edit-icon {
+  color: blueviolet;
+  margin-left: 40rem;
+  display: flex;
+  flex-direction: row;
+}
+.profile-buttons {
+  display: flex !important;
+  align-items: center;
+  flex-direction: row !important    ;
+}
+@media only screen and (max-width: 765px) {
+  .visible-icon {
+    margin-left: 10rem;
+  }
+  .edit-icon {
+    margin-left: 10rem;
+  }
+}

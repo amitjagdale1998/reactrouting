@@ -3,7 +3,9 @@ import "../styles/login.scss";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import axios from "axios";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { MDBInput } from "mdb-react-ui-kit";
+import ForgaotPassword from "./ForgaotPassword";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -46,20 +48,18 @@ const Login = () => {
     }
 
     try {
-      alert("hello");
-
       const response = await axios.post("http://localhost:5000/api/v1/login", {
         ...loginData,
       });
       console.log(response.data);
       const loginResponse = response.data;
-      if (loginResponse.success != true) {
-        alert("something wrong");
+      if (loginResponse.status === 400) {
+        alert(loginResponse.error);
       } else {
         localStorage.setItem("token", loginResponse.token);
-
+        localStorage.setItem("password", loginData.password);
         alert("login sucessfully!");
-        window.location.href = "/home";
+        window.location.href = "/";
       }
     } catch (error) {
       console.log(error);
@@ -86,49 +86,36 @@ const Login = () => {
                     <form>
                       <p>Please create your account</p>
 
-                      <div className="form-outline mb-4">
-                        <input
-                          type="email"
-                          id="form2Example11"
-                          className="form-control"
-                          placeholder="Phone number or email address"
-                          value={loginData.email}
-                          name="email"
-                          onChange={handleOnchange}
-                        />{" "}
-                        {errorEmail ? "Invalid Email" : ""}
-                        <i className="far fa-eye"></i>
-                        <label className="form-label" htmlFor="form2Example11">
-                          Email
-                        </label>
-                      </div>
-
-                      <div className="form-outline mb-4">
-                        <input
-                          type={showPassword ? "text" : "password"}
-                          id="form2Example22"
-                          className="form-control"
-                          name="password"
-                          value={loginData.password}
-                          onChange={handleOnchange}
+                      <MDBInput
+                        className="mb-4"
+                        type="email"
+                        id="form1Example1"
+                        label="Email address"
+                        value={loginData.email}
+                        name="email"
+                        onChange={handleOnchange}
+                      />
+                      <MDBInput
+                        className="mb-4"
+                        type={showPassword ? "text" : "Password"}
+                        id="form1Example3"
+                        label="Password"
+                        value={loginData.password}
+                        name="password"
+                        onChange={handleOnchange}
+                      />
+                      {showPasswordIcon ? (
+                        <VisibilityIcon
+                          className="mb-1"
+                          onClick={showPasswordtext}
                         />
-                        {showPasswordIcon ? (
-                          <VisibilityIcon
-                            className="mb-1"
-                            onClick={showPasswordtext}
-                          />
-                        ) : (
-                          <VisibilityOffIcon
-                            className="mb-1"
-                            onClick={showPasswordtext}
-                          />
-                        )}
-                        {errorPass ? "Invalid password" : ""}
-
-                        <label className="form-label" htmlFor="form2Example22">
-                          Password
-                        </label>
-                      </div>
+                      ) : (
+                        <VisibilityOffIcon
+                          className="mb-1"
+                          onClick={showPasswordtext}
+                        />
+                      )}
+                      {errorPass ? "Invalid password" : ""}
 
                       <div className="text-center pt-1 mb-5 pb-1">
                         <button
@@ -138,8 +125,9 @@ const Login = () => {
                         >
                           Log in
                         </button>
-                        <a className="text-muted" href="#!">
+                        <a className="text-muted">
                           Forgot password?
+                          <ForgaotPassword />
                         </a>
                       </div>
 

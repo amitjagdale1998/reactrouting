@@ -15,19 +15,40 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
+import Logout from "./commonpages/Logout";
+import Swal from "sweetalert2";
 
 const drawerWidth = 240;
 const navItems = [
-  { label: "Home", link: "home" },
+  { label: "Home", link: "/" },
   { label: "Images", link: "images" },
   { label: "Upload", link: "upload" },
-  { label: "Logout", link: "logout" },
+
+  { label: "Profile", link: "profile" },
 ];
 
 function Header(props) {
+  const location = React.useState(useLocation());
+
+  const [logoutCall, setLogoutCall] = React.useState(false);
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  function closeAllSweetAlerts() {
+    Swal.close(() => Logout(props.logoutSwwtAlert()));
+  }
+  function logout() {
+    setLogoutCall(true);
+    Logout();
+  }
+
+  React.useEffect(() => {
+    if (logoutCall) {
+      closeAllSweetAlerts();
+    } else {
+      return;
+    }
+  }, [location]);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -79,7 +100,7 @@ function Header(props) {
               component="div"
               sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
             >
-              MUI
+              HandyNotes
             </Typography>
             <Box sx={{ display: { xs: "none", sm: "block" } }}>
               {navItems.map((item) => (
@@ -87,11 +108,18 @@ function Header(props) {
                   key={item.label}
                   component={Link}
                   to={item.link}
-                  sx={{ color: "#fff" }}
+                  sx={{
+                    color:
+                      location.pathname == item.link ? "bluevoilet" : "#fff",
+                    fontWeight: location.pathname == item.link ? "bolder" : " ", // Apply bold font weight for the active link
+                  }}
                 >
                   {item.label}
                 </Button>
               ))}
+              <Button onClick={() => logout()} sx={{ color: "#fff" }}>
+                LOGOUT
+              </Button>
             </Box>
           </Toolbar>
         </AppBar>
@@ -110,9 +138,25 @@ function Header(props) {
                 boxSizing: "border-box",
                 width: drawerWidth,
               },
+              "& > div": {
+                // Your CSS styling for the div tag goes here
+
+                padding: "10px",
+                textAlign: "center",
+              },
             }}
           >
             {drawer}
+            <span onClick={handleDrawerToggle}>
+              <div
+                ModalProps={{
+                  keepMounted: true, // Better open performance on mobile.
+                }}
+                onClick={() => logout()}
+              >
+                Logout
+              </div>
+            </span>
           </Drawer>
         </Box>
       </Box>

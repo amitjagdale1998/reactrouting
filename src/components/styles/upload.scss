@@ -1,3 +1,20 @@
 .uplaod-page {
   align-items: center;
+  width: 50% !important;
+  justify-content: center;
+}
+.upload-buttons {
+  display: flex;
+  flex-direction: row;
+  box-sizing: content-box !important;
+  justify-content: center;
+}
+.submit-button {
+  margin-right: 10px;
+
+  text-align: center !important;
+}
+.cancel-button {
+  margin-left: 10px;
+  text-align: center !important;
 }

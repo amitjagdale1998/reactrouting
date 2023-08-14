@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import "../styles/login.scss";
+import { MDBInput } from "mdb-react-ui-kit";
 const Signup = () => {
-  const [signuData, setSignupData] = useState({
+  const [signupData, setSignupData] = useState({
+    name: "",
     email: "",
     password: "",
     cpassword: "",
@@ -9,8 +11,8 @@ const Signup = () => {
   const handleOnchange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    setSignupData({ ...signuData, [name]: value });
-    console.log(signuData);
+    setSignupData({ ...signupData, [name]: value });
+    console.log(signupData);
   };
   return (
     <>
@@ -44,49 +46,42 @@ const Signup = () => {
 
                       <form>
                         <p>Please Signup to your account</p>
-
-                        <div className="form-outline mb-4">
-                          <input
-                            type="email"
-                            id="form2Example11"
-                            className="form-control"
-                            placeholder="Phone number or email address"
-                            value={signuData.email}
-                            onChange={handleOnchange}
-                            name="email"
-                          />
-                          <label className="form-label" for="form2Example11">
-                            Email
-                          </label>
-                        </div>
-
-                        <div className="form-outline mb-4">
-                          <input
-                            type="password"
-                            id="form2Example22"
-                            className="form-control"
-                            name="password"
-                            value={signuData.password}
-                            onChange={handleOnchange}
-                          />
-                          <label className="form-label" for="form2Example22">
-                            Password
-                          </label>
-                        </div>
-                        <div className="form-outline mb-4">
-                          <input
-                            type="password"
-                            id="form2Example22"
-                            className="form-control"
-                            name="cpassword"
-                            value={signuData.cpassword}
-                            onChange={handleOnchange}
-                          />
-                          <label className="form-label" for="form2Example22">
-                            Confirm Password
-                          </label>
-                        </div>
-
+                        <MDBInput
+                          className="mb-4"
+                          type="text"
+                          id="form1Example2"
+                          label="Name"
+                          value={signupData.name}
+                          name="name"
+                          onChange={handleOnchange}
+                        />
+                        <MDBInput
+                          className="mb-4"
+                          type="email"
+                          id="form1Example1"
+                          label="Email address"
+                          value={signupData.email}
+                          name="email"
+                          onChange={handleOnchange}
+                        />
+                        <MDBInput
+                          className="mb-4"
+                          type="password"
+                          id="form1Example3"
+                          label="Password"
+                          value={signupData.password}
+                          name="password"
+                          onChange={handleOnchange}
+                        />
+                        <MDBInput
+                          className="mb-4"
+                          type="password"
+                          id="form1Example4"
+                          label="Confirm Password"
+                          value={signupData.cpassword}
+                          name="cpassword"
+                          onChange={handleOnchange}
+                        />{" "}
                         <div className="text-center pt-1 mb-5 pb-1">
                           <button
                             className="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
@@ -98,7 +93,6 @@ const Signup = () => {
                             Forgot password?
                           </a>
                         </div>
-
                         <div className="d-flex align-items-center justify-content-center pb-4">
                           <p className="mb-0 me-2">Don't have an account?</p>
                           <button
